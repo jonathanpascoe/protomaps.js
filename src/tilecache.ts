@@ -167,7 +167,12 @@ export class PmtilesSource implements TileSource {
         signal: signal,
       })
         .then((resp) => {
-          return resp.arrayBuffer();
+          if (resp.status >= 400) {
+            const message = `Message: Could not retrieve tile\n Status Code: ${resp.status}`;
+            throw new Error(message);
+          } else {
+            return resp.arrayBuffer();
+          }
         })
         .then((buffer) => {
           let result = parseTile(buffer, tileSize);
@@ -211,7 +216,12 @@ export class ZxySource implements TileSource {
     return new Promise((resolve, reject) => {
       fetch(url, { signal: signal })
         .then((resp) => {
-          return resp.arrayBuffer();
+          if (resp.status >= 400) {
+            const message = `Message: Could not retrieve tile\n Status Code: ${resp.status}`;
+            throw new Error(message);
+          } else {
+            return resp.arrayBuffer();
+          }
         })
         .then((buffer) => {
           let result = parseTile(buffer, tileSize);
